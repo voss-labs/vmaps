@@ -25,12 +25,10 @@ Put images in `public/reference/`, then update `sourceFrames` in `src/App.tsx`. 
 
 ## Validate a change
 
-Run `pnpm typecheck` and `pnpm build`. In the browser, check both stair directions, all five spawn positions, balcony edges, obstacles, reset, overview switching, mouse release, reference dialogs, and touch controls. Check desktop and mobile layouts.
+Run `npm run check` and `npm run build`. In the browser, check both stair directions, all five spawn positions, balcony edges, obstacles, reset, overview switching, mouse release, reference dialogs, and touch controls. Check desktop and mobile layouts.
 
 If WebGL fails, enable hardware acceleration or test another browser. Pointer lock may be restricted by embedded previews; dragging the scene remains available as a fallback.
 
 ## Deployment
 
 The export has no backend or private runtime bindings. Deploy the contents of `dist/` to any static HTTPS host. The model and reference images are bundled with the website. No credentials belong in the repository.
-
-The original generated source snapshot was commit `3824724421495123441c4bef0c67c059f0e3cdc6`; this export makes only the portability, packaging and VOSS Labs attribution changes described in the README.
