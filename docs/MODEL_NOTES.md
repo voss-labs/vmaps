@@ -6,12 +6,12 @@ Source video: `IMG_4946.MOV`, supplied for the VIT interior project. Duration: 4
 
 Fifteen frames were extracted at three-second intervals. Four representative images are included in `public/reference/` and shown in the website:
 
-| Image | Approximate time | Main evidence |
-| --- | --- | --- |
-| `feature-wall.jpg` | 00:07 | Yellow angled façade, galleries and café edge |
-| `atrium.jpg` | 00:16 | Stair gallery, concrete volume and gathering area |
-| `walkway.jpg` | 00:25 | Interior walkway and surrounding walls |
-| `stairway.jpg` | 00:31 | Central stairs, handrails and upper landing |
+| Image              | Approximate time | Main evidence                                     |
+| ------------------ | ---------------- | ------------------------------------------------- |
+| `feature-wall.jpg` | 00:07            | Yellow angled façade, galleries and café edge     |
+| `atrium.jpg`       | 00:16            | Stair gallery, concrete volume and gathering area |
+| `walkway.jpg`      | 00:25            | Interior walkway and surrounding walls            |
+| `stairway.jpg`     | 00:31            | Central stairs, handrails and upper landing       |
 
 ## Observed architecture
 

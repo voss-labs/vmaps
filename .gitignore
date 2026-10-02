@@ -1,8 +1,12 @@
+.preset/
+
 node_modules/
 dist/
 .vite/
 *.tsbuildinfo
-.env*
-!.env.example
+
 .DS_Store
 *.log
+
+.env*
+!.env.example
