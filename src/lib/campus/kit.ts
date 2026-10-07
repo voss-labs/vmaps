@@ -48,6 +48,8 @@ export function createKit(scene: THREE.Scene) {
     [roof, new Map()],
   ])
   const obstacles: Obstacle[] = []
+  // Height of the floor being furnished; pieces give heights above it.
+  let base = 0
 
   function put(
     geo: THREE.BufferGeometry,
@@ -61,7 +63,7 @@ export function createKit(scene: THREE.Scene) {
     const g = geo.index ? geo.toNonIndexed() : geo
     if (g !== geo) geo.dispose()
     if (yaw) g.rotateY(yaw)
-    g.translate(x, y, z)
+    g.translate(x, y + base, z)
     const b = batches.get(group)!
     if (!b.has(mat)) b.set(mat, [])
     b.get(mat)!.push(g)
@@ -74,7 +76,7 @@ export function createKit(scene: THREE.Scene) {
     bottom: number,
     top: number
   ) {
-    obstacles.push({ x, z, w, d, bottom, top })
+    obstacles.push({ x, z, w, d, bottom: bottom + base, top: top + base })
   }
   function bounds(points: Vec2[], bottom: number, top: number) {
     const xs = points.map((p) => p[0]),
@@ -384,6 +386,9 @@ export function createKit(scene: THREE.Scene) {
     guard,
     bars,
     finish,
-    ...createText(main, labels),
+    setBase: (y: number) => {
+      base = y
+    },
+    ...createText(main, labels, () => base),
   }
 }

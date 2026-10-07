@@ -1,5 +1,5 @@
 export { buildCampus } from "./build"
-export { GLASS_BOX, HALL, NORTH_ROW, SOUTH_ROW, VOIDS } from "./layout"
+export { FLOORS, GLASS_BOX, HALL, NORTH_ROW, SOUTH_ROW, VOIDS } from "./layout"
 export { isBlocked, levelName, surfaceHeight } from "./navigation"
 export { outline } from "./openings"
 export { PLACES, START_PLACE, type Place, type PlaceId } from "./places"

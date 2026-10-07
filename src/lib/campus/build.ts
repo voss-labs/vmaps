@@ -27,8 +27,12 @@ function checkLayout(obstacles: Obstacle[]) {
       )
   }
   for (const p of PLACES) {
-    const [x, , z] = p.pos
-    if (surfaceHeight(x, z, 0) === null || isBlocked(x, z, 0, obstacles))
+    const [x, eye, z] = p.pos
+    const ground = eye - 1.65
+    if (
+      surfaceHeight(x, z, ground) === null ||
+      isBlocked(x, z, ground, obstacles)
+    )
       console.warn(
         `[vmaps] viewpoint "${p.id}" starts inside something; move it in places.ts`
       )

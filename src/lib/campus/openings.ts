@@ -63,7 +63,17 @@ function onSegment(p: Vec2, a: Vec2, b: Vec2) {
     : null
 }
 
+const sideOf = (nx: number, nz: number) =>
+  Math.abs(nx) > Math.abs(nz)
+    ? nx > 0
+      ? "north"
+      : "south"
+    : nz > 0
+      ? "east"
+      : "west"
+
 function opening(kit: Kit, v: Void) {
+  if (v.bare) return
   const LABS = -(v.depth ?? FLOOR_HEIGHT)
   const pts = outline(v)
   const xs = pts.map((p) => p[0]),
@@ -76,7 +86,7 @@ function opening(kit: Kit, v: Void) {
     Math.max(...xs) - Math.min(...xs),
     Math.max(...zs) - Math.min(...zs),
   ]
-  kit.box(w + 2, 0.3, d + 2, cx, LABS - 0.15, cz, "labFloor")
+  kit.box(w + 0.4, 0.3, d + 0.4, cx, LABS - 0.15, cz, "labFloor")
   const entry = entryOf(v)
   for (let i = 0; i < pts.length; i++) {
     const a = pts[i],
@@ -87,6 +97,7 @@ function opening(kit: Kit, v: Void) {
     let [nx, nz] = [(b[1] - a[1]) / len, -(b[0] - a[0]) / len]
     const [mx, mz] = [(a[0] + b[0]) / 2 - cx, (a[1] + b[1]) / 2 - cz]
     if (nx * mx + nz * mz < 0) [nx, nz] = [-nx, -nz]
+    if (v.open?.includes(sideOf(nx, nz))) continue
     const shift = (p: Vec2, s: number): Vec2 => [p[0] + nx * s, p[1] + nz * s]
     kit.panel(shift(a, -0.12), shift(b, -0.12), LABS, 0, 0.2, "concrete")
     const guard = (p: Vec2, q: Vec2) => {

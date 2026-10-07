@@ -1,5 +1,6 @@
 import type { Kit } from "./kit"
 import { ATRIUM, FLOOR_HEIGHT, HALL, VOIDS } from "./layout"
+import { CANTEEN_FLOOR, M_CANTEEN } from "./m-canteen"
 import { floorSlab, openings, outline } from "./openings"
 import { placePiece, WORLD } from "./pieces"
 import { buildStructure } from "./structure"
@@ -119,4 +120,7 @@ export function buildHall(kit: Kit) {
   openings(kit)
   buildStructure(kit)
   for (const p of ATRIUM) placePiece(kit, p, WORLD)
+  kit.setBase(CANTEEN_FLOOR)
+  for (const p of M_CANTEEN) placePiece(kit, p, WORLD)
+  kit.setBase(0)
 }

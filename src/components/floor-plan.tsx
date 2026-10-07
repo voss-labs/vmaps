@@ -1,5 +1,6 @@
 import { Layers3 } from "lucide-react"
 import {
+  FLOORS,
   GLASS_BOX,
   HALL,
   NORTH_ROW,
@@ -10,9 +11,12 @@ import {
   type PlaceId,
 } from "@/lib/campus"
 
-const SCALE = 1.5
+// Fit the main hall and anything walkable beyond its east wall into the 190 px card.
+const TOP = -HALL.length / 2 - 3
+const BOTTOM = Math.max(HALL.length / 2, ...FLOORS.map((f) => f.z[1])) + 6
+const SCALE = Math.min(1.5, 184 / (BOTTOM - TOP))
 const px = (x: number) => 95 + x * SCALE
-const py = (z: number) => 95 + z * SCALE
+const py = (z: number) => 3 + (z - TOP) * SCALE
 
 type Props = {
   mode: "walk" | "overview"
@@ -55,6 +59,18 @@ export function FloorPlan({ mode, level, pos, active, onGo }: Props) {
           stroke="#a5aaa3"
           strokeWidth="1.2"
         />
+        {FLOORS.slice(1).map((f) => (
+          <rect
+            key={`${f.x[0]},${f.z[0]}`}
+            x={px(f.x[0])}
+            y={py(f.z[0])}
+            width={(f.x[1] - f.x[0]) * SCALE}
+            height={(f.z[1] - f.z[0]) * SCALE}
+            fill="#e9e8e0"
+            stroke="#a5aaa3"
+            strokeWidth=".6"
+          />
+        ))}
         {rows.map(({ s, side }) => {
           const depth = s.depth ?? HALL.blockDepth
           const block = s.kind === "block"
@@ -128,13 +144,13 @@ export function FloorPlan({ mode, level, pos, active, onGo }: Props) {
         />
         <text
           x="95"
-          y={py(end) + 7.5}
+          y={py(BOTTOM) - 1}
           textAnchor="middle"
           fontSize="5.5"
           fill="#6d7569"
           fontFamily="Arial"
         >
-          TO M BLOCK
+          M BLOCK
         </text>
         {PLACES.map((p, i) => (
           <g

@@ -47,8 +47,8 @@ export function restoreView(
   orbit: OrbitControls,
   enterOverview: () => void
 ) {
-  const [x, , z, rx, ry] = saved.walk
-  camera.position.set(x, 1.65, z)
+  const [x, y, z, rx, ry] = saved.walk
+  camera.position.set(x, y, z)
   camera.rotation.set(rx, ry, 0, "YXZ")
   walkPos.copy(camera.position)
   walkRot.copy(camera.rotation)

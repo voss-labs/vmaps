@@ -52,6 +52,7 @@ Open http://localhost:5173 and press Start walking. Node 22.13 or newer.
 
 - Level 1 of the main building at an estimated scale (about 110 by 36 m): blocks A to G with their feature volumes and signs, the exam department, the stair tower and blue recess, the C block canteen, Nescafe, the glass box on its platform, the main gate and Gate 2
 - Four openings in the floor down to the ground-floor labs, two with stairs, each with a low parapet, a handrail and benches
+- Two canteens to walk into: Cafeteria C-101 in C block, and the M block canteen down the steps at the east end
 - First-person keyboard navigation and mouse look on Level 1, with collisions and drag-to-look as the fallback
 - Rotatable 3D overview with block letters and place names, and a live position marker on the floor plan
 - Seven viewpoint shortcuts and four reference frames from an earlier video
@@ -92,7 +93,7 @@ docs/                    model notes and the development guide
 
 ## Model accuracy
 
-This draft models Level 1 of the main building from photos of the floor, a hand-drawn block sketch and a satellite view of the roof. It is not a measured scan or a complete campus model: block sizes, positions and the upper floors are estimates, and M block and the ground-floor labs are not modelled yet. Read [docs/MODEL_NOTES.md](./docs/MODEL_NOTES.md) before expanding it or presenting it as an accurate map.
+This draft models Level 1 of the main building from photos of the floor, a hand-drawn block sketch and a satellite view of the roof. It is not a measured scan or a complete campus model: block sizes, positions and the upper floors are estimates, and the rest of M block and the ground-floor labs are not modelled yet. Read [docs/MODEL_NOTES.md](./docs/MODEL_NOTES.md) before expanding it or presenting it as an accurate map.
 
 ## Docs
 

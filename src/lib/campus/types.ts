@@ -45,6 +45,15 @@ export type MatName =
   | "plastic"
   | "screen"
   | "roofSheet"
+  | "gloss"
+  | "chair"
+  | "mosaic"
+  | "salmon"
+  | "padded"
+  | "laminate"
+  | "darkBrick"
+  | "teal"
+  | "soffit"
 
 /** "out" faces the main hall; the rest are compass directions in the model. */
 export type Face = "out" | "west" | "east" | "north" | "south"
@@ -196,6 +205,52 @@ export type Piece = (
       turn?: number
     }
   | { kind: "label"; text: string; at: Vec3 }
+  /** A wall between two plan points; solid in short steps so angled walls block only themselves. */
+  | {
+      kind: "wall"
+      from: Vec2
+      to: Vec2
+      y?: Vec2
+      thick?: number
+      mat: MatName
+      solid?: boolean
+    }
+  /** A table with chairs on both long sides; `size` is [length, width] of the top. */
+  | {
+      kind: "dining"
+      at: Vec2
+      size?: Vec2
+      seats?: number
+      style?: "square" | "round" | "bar"
+      top?: MatName
+      turn?: boolean
+    }
+  | { kind: "booth"; at: Vec2; length: number; turn?: boolean }
+  | {
+      kind: "pendants"
+      from: Vec2
+      to: Vec2
+      count: number
+      y: number
+      top: number
+    }
+  | { kind: "fan"; at: Vec3; wall?: boolean; face?: Face }
+  | {
+      kind: "cylinder"
+      at: Vec3
+      r: number
+      h: number
+      top?: number
+      mat: MatName
+    }
+  /** A steel serving counter; `guard` adds a glass sneeze guard. */
+  | {
+      kind: "counter"
+      at: Vec2
+      length: number
+      turn?: boolean
+      guard?: boolean
+    }
 ) & { name?: string }
 
 export type Segment = {
@@ -226,6 +281,8 @@ export type Segment = {
   tint: string
   /** No outer wall, for gates. */
   opening?: boolean
+  /** Along range where Level 1 is left open inside, for rooms built from pieces. */
+  hollow?: Vec2
   notes?: string
   pieces: Piece[]
 }
@@ -249,6 +306,10 @@ export type Void = {
   stairs?: "west" | "east"
   /** Benches on both long sides, or only on one: north is +x, east is +z. */
   benches?: boolean | "north" | "south" | "east" | "west"
+  /** Sides left without a guard or shaft wall, where a room carries on below. */
+  open?: ("north" | "south" | "east" | "west")[]
+  /** Only a hole in the floor; the room below builds its own walls. */
+  bare?: boolean
 }
 
 /** The glass box between D and E, its platform and the stair under it (world coordinates). */
@@ -265,6 +326,9 @@ export type GlassBox = {
   stairs: { from: Vec2; to: Vec2; width: number }
   screen: { at: Vec3; size: Vec2; text: string }
 }
+
+/** A walkable area: flat at `y`, or stairs rising from y[0] to y[1] across it along `axis`. */
+export type Floor = { x: Vec2; z: Vec2; y: number | Vec2; axis?: "x" | "z" }
 
 export type Obstacle = {
   x: number

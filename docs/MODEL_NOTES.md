@@ -22,6 +22,11 @@ The main building is one hall under a steel space-frame roof. The west end is a 
 - South side: the main gate, G (sawtooth glass, wedge balconies, a red brick box over the Computer Centre), a white stair tower with orange walls, the blue recess, F (a white Level 1 volume with a prow, the cream wall and timber box above, the F stair and recess, then a tan base, black band and orange box), Gate 2 out to the parking, and E (red brick wall with a wavy top, timber box, stationery shop, Department of Information Technology, lift and curved maroon wall).
 - A glass box on slim columns stands between D and E, above a Level 2 platform reached by timber steps and a stair underneath. The east wall opens to the M block canteen and the lounge.
 
+Two canteens can be walked into:
+
+- **Cafeteria C-101** in C block, through the door in the polycarbonate front: the V billing counter, a dining area up to the back wall, booths along a padded wall, an orange end wall, and Ribbons & Balloons through a brick funnel at the west end. It follows photos 18 to 27.
+- **The M block canteen**, 7 steps (1.1 m) down from the east end. It is one long hall running north-south, with the glass wall onto the road at the south end. It has a servery bay running back under the platform, the menu wall, the kitchen, and a side area with the Innovation Lounge (M-003) door at the north end. It follows photos 44 to 63.
+
 The main hall floor is Level 1. The ground floor below holds the labs and is reached by stairs in openings in the Level 1 floor. Levels 1 to 3 hold classrooms and Level 4 is a terrace and viewing gallery. Rooms are named by block, floor and number, for example F205.
 
 ## Estimates
@@ -32,7 +37,7 @@ No photogrammetry, depth recovery or scanning was done. The scene is a manual in
 
 ## Not modelled yet
 
-M block (its ground floor is the innovation labs and canteen), the ground-floor labs, room interiors, and walking on any floor other than Level 1.
+The rest of M block, including the innovation labs behind the M-003 door, the ground-floor labs, other room interiors, and walking on any upper floor.
 
 ## Improving accuracy
 

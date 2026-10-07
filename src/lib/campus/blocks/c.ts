@@ -1,16 +1,19 @@
 // Positions are local to this entry; layout.ts explains the coordinates.
 import type { Piece, Segment } from "../types"
+import { CANTEEN } from "./c-canteen"
 
 // The canteen box starts 9 m along, after the plain front; its front is 9 bays of 1.13 m.
 const A0 = 9
 // The plain front west of the canteen sits 2.6 m back.
 const BACK = -2.57
-const pendants: Piece[] = [1.8, 3.4, 5, 6.6, 8.2, 9.8].map((a) => ({
-  kind: "box",
-  at: [1.3, 2.75, A0 + a],
-  size: [0.32, 0.22, 0.32],
-  mat: "light",
-}))
+const pendants: Piece = {
+  kind: "pendants",
+  from: [1.3, A0 + 1.8],
+  to: [1.3, A0 + 9.8],
+  count: 6,
+  y: 2.75,
+  top: 3.7,
+}
 
 export const C: Segment = {
   id: "C",
@@ -23,6 +26,7 @@ export const C: Segment = {
   upper: "light",
   ground: "plain",
   recess: [0, A0, 2.6],
+  hollow: [5, 21],
   letterAt: [2.52, 5.2, A0 + 5.3],
   notes:
     "Cafeteria C-101 is the polycarbonate box at Level 1. Ribbons & Balloons and the washrooms are at the west end behind the plain front; the booths and the orange wall are at the east end.",
@@ -157,14 +161,7 @@ export const C: Segment = {
       kind: "box",
       at: [1.25, 3.72, A0 + 5.3],
       size: [2.4, 0.05, 10.5],
-      mat: "black",
-    },
-    {
-      name: "Canteen footprint",
-      kind: "solid",
-      at: [1.25, A0 + 5.3],
-      size: [2.5, 10.65],
-      y: [0, 3.9],
+      mat: "soffit",
     },
     { kind: "awning", out: 2.5, along: [A0, A0 + 10.65], y: 2.9, depth: 0.9 },
     {
@@ -175,27 +172,8 @@ export const C: Segment = {
       bg: "#1d4fae",
       text: "Cafeteria\nC-101",
     },
-    {
-      name: "Orange east wall inside",
-      kind: "box",
-      at: [1.25, 1.85, A0 + 10.2],
-      size: [2.3, 3.7, 0.1],
-      mat: "orange",
-    },
-    {
-      name: "Billing counter",
-      kind: "box",
-      at: [0.8, 0.53, A0 + 3.3],
-      size: [0.6, 1.05, 1.5],
-      mat: "black",
-    },
-    {
-      kind: "box",
-      at: [0.8, 0.54, A0 + 2.45],
-      size: [0.62, 1.07, 0.3],
-      mat: "red",
-    },
-    ...pendants,
+    pendants,
+    ...CANTEEN,
     {
       name: "Frame column",
       kind: "box",
@@ -252,10 +230,11 @@ export const C: Segment = {
       height: 0.6,
       bg: "#c0392b",
     },
-    { kind: "table", at: [3.4, A0 + 1.3] },
-    { kind: "table", at: [3.4, A0 + 3.8] },
-    { kind: "table", at: [3.4, A0 + 6.3] },
-    { kind: "table", at: [3.4, A0 + 8.8] },
+    // Cafe tables outside, leaving the way to the door in bay 2 clear.
+    { kind: "table", at: [3.4, A0 + 0.3] },
+    { kind: "table", at: [3.4, A0 + 4.4] },
+    { kind: "table", at: [3.4, A0 + 6.8] },
+    { kind: "table", at: [3.4, A0 + 9.2] },
     {
       name: "Raised landing",
       kind: "box",

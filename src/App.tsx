@@ -35,7 +35,7 @@ export default function App() {
     [mobilePlaces, setMobilePlaces] = useState(false),
     [pos, setPos] = useState({ x: 0, z: -51, y: 0, yaw: 0 })
   const place = PLACES.find((p) => p.id === active)!
-  const level = levelName(pos.y)
+  const level = levelName(pos.y, pos.z)
   const goTo = (id: PlaceId) => {
     setActive(id)
     viewer.current?.pause()

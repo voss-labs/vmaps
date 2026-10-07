@@ -11,7 +11,11 @@ function canvasTexture(c: HTMLCanvasElement) {
 }
 
 /** Flat text and picture surfaces: signs, block letters, boards and overview labels. */
-export function createText(main: THREE.Group, labels: THREE.Group) {
+export function createText(
+  main: THREE.Group,
+  labels: THREE.Group,
+  base: () => number
+) {
   function addPlane(
     c: HTMLCanvasElement,
     w: number,
@@ -25,7 +29,7 @@ export function createText(main: THREE.Group, labels: THREE.Group) {
       new THREE.PlaneGeometry(w, h),
       new THREE.MeshBasicMaterial({ map: canvasTexture(c), toneMapped: false })
     )
-    mesh.position.set(x, y, z)
+    mesh.position.set(x, y + base(), z)
     mesh.rotation.y = yaw
     main.add(mesh)
   }
@@ -147,7 +151,7 @@ export function createText(main: THREE.Group, labels: THREE.Group) {
         transparent: true,
       })
     )
-    sprite.position.set(x, y, z)
+    sprite.position.set(x, y + base(), z)
     sprite.scale.set((height * c.width) / c.height, height, 1)
     sprite.renderOrder = 10
     labels.add(sprite)

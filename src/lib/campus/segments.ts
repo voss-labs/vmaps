@@ -17,6 +17,12 @@ function levelOne(kit: Kit, s: Segment, side: 1 | -1, height = FLOOR_HEIGHT) {
     half = HALL.width / 2
   const wall = s.wall ?? "plaster"
   const part = (a0: number, a1: number, d: number) => {
+    const h = s.hollow
+    if (h && a1 > h[0] && a0 < h[1]) {
+      if (a0 < h[0]) part(a0, h[0], d)
+      if (a1 > h[1]) part(h[1], a1, d)
+      return
+    }
     if (a1 - a0 < 0.01 || d < 0.1) return
     kit.box(
       d,

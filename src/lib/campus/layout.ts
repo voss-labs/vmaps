@@ -1,4 +1,6 @@
-import type { GlassBox, Piece, Vec2, Void } from "./types"
+import type { Floor, GlassBox, Piece, Vec2, Void } from "./types"
+
+import { M_FLOORS } from "./m-canteen"
 
 export { NORTH_ROW } from "./north-row"
 export { SOUTH_ROW } from "./south-row"
@@ -15,6 +17,17 @@ export { SOUTH_ROW } from "./south-row"
 
 export const HALL = { length: 110, width: 36, roof: 16, blockDepth: 9 }
 export const FLOOR_HEIGHT = 4
+
+// Where a visitor can walk: Level 1 of the main hall, kept 0.45 m off the outer walls, then M block.
+const EDGE = 0.45
+export const FLOORS: Floor[] = [
+  {
+    x: [-HALL.width / 2 + EDGE, HALL.width / 2 - EDGE],
+    z: [-HALL.length / 2 + EDGE, HALL.length / 2 - EDGE],
+    y: 0,
+  },
+  ...M_FLOORS,
+]
 
 const curve = (p0: Vec2, p1: Vec2, p2: Vec2, n: number): Vec2[] =>
   Array.from({ length: n - 1 }, (_, i) => {
@@ -77,10 +90,19 @@ export const VOIDS: Void[] = [
   {
     name: "Well under the platform",
     x: -1.6,
-    z: 49.75,
+    z: 48.7,
     w: 6.2,
-    d: 6.5,
+    d: 4.4,
     depth: 1.1,
+    open: ["east"],
+  },
+  {
+    name: "M canteen servery bay under the platform",
+    x: -1.7,
+    z: 53.025,
+    w: 6.6,
+    d: 3.85,
+    bare: true,
   },
 ]
 
@@ -262,23 +284,5 @@ export const ATRIUM: Piece[] = [
     height: 0.9,
     bg: "#f2c230",
     face: "south",
-  },
-  {
-    name: "Canteen shutter below",
-    kind: "board",
-    at: [-1.6, -0.45, 52.86],
-    width: 3,
-    height: 0.9,
-    bg: "#8d969c",
-    face: "west",
-  },
-  {
-    kind: "board",
-    at: [-3.7, -0.4, 52.86],
-    width: 0.6,
-    height: 0.9,
-    bg: "#c0392b",
-    text: "FOOD\nGPA?",
-    face: "west",
   },
 ]

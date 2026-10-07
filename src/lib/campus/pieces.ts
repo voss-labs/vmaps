@@ -1,4 +1,5 @@
 import { bulgePoints, faceYaw, toWorld, type Frame } from "./frame"
+import { booth, counter, dining, fan, pendants, wall } from "./furniture"
 import type { Kit } from "./kit"
 import {
   band,
@@ -140,11 +141,9 @@ export function placePiece(kit: Kit, p: Piece, f: Frame) {
     case "table":
       table(kit, w(p.at))
       break
-    case "bench": {
-      const alongZ = Math.abs(Math.sin(f.yaw)) > 0.5 !== Boolean(p.turn)
-      bench(kit, w(p.at), p.length ?? 2.2, alongZ)
+    case "bench":
+      bench(kit, w(p.at), p.length ?? 2.2, alongZ(f, p.turn))
       break
-    }
     case "column":
       column(kit, w(p.at), p.y, p.r, p.mat)
       break
@@ -261,5 +260,54 @@ export function placePiece(kit: Kit, p: Piece, f: Frame) {
     case "label":
       kit.label(p.text, f.x(p.at[0]), p.at[1], f.z(p.at[2]))
       break
+    case "wall":
+      wall(
+        kit,
+        w(p.from),
+        w(p.to),
+        p.y ?? [0, 3.7],
+        p.thick ?? 0.15,
+        p.mat,
+        p.solid !== false
+      )
+      break
+    case "dining":
+      dining(
+        kit,
+        w(p.at),
+        alongZ(f, p.turn),
+        p.size ?? [1.2, 0.75],
+        p.seats ?? 2,
+        p.style ?? "square",
+        p.top ?? "linen"
+      )
+      break
+    case "booth":
+      booth(kit, w(p.at), p.length, alongZ(f, p.turn))
+      break
+    case "pendants":
+      pendants(kit, w(p.from), w(p.to), p.count, p.y, p.top)
+      break
+    case "fan":
+      fan(kit, f.x(p.at[0]), p.at[1], f.z(p.at[2]), !!p.wall, yaw(p.face))
+      break
+    case "cylinder":
+      kit.cylinder(
+        p.r,
+        p.h,
+        f.x(p.at[0]),
+        p.at[1],
+        f.z(p.at[2]),
+        p.mat,
+        p.top ?? p.r
+      )
+      break
+    case "counter":
+      counter(kit, w(p.at), p.length, alongZ(f, p.turn), !!p.guard)
+      break
   }
 }
+
+// Long things lie along the block in a row entry and along x in the main hall list, unless turned.
+const alongZ = (f: Frame, turn?: boolean) =>
+  Math.abs(Math.sin(f.yaw)) > 0.5 !== Boolean(turn)

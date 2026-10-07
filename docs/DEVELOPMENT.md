@@ -22,6 +22,8 @@ Common corrections:
 - Move a landmark: change the numbers in its `at`, or the plan points of a `shape`.
 - Move an opening in the floor: change `x`, `z`, `w` and `d` in `VOIDS`, or its `points` outline, `entry` and stair `flights` when it is drawn as an outline.
 - Add something: copy a similar piece. Piece kinds are listed in `types.ts`.
+- Build a room inside a block: set `hollow: [along from, along to]` so Level 1 is left open there, then add `wall` pieces (they block only along their length, so angled walls work), `solid` boxes for the parts nobody walks into, and furniture: `dining` (a table with chairs; square, round or bar), `booth`, `counter`, `pendants` and `fan`. `blocks/c-canteen.ts` is the worked example.
+- Make a new area walkable: add a rectangle to `FLOORS` in `layout.ts`, flat at one height or rising across it like stairs. Pieces for an area below Level 1 are placed with the builder's base set to that floor, so their heights are above their own floor.
 
 A piece blocks the visitor only when it has `solid: true`. Blocks, openings, stairs, tables and benches are solid already.
 

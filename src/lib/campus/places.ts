@@ -8,6 +8,7 @@ export type PlaceId =
   | "nescafe"
   | "gate-2"
   | "glass-box"
+  | "m-canteen"
 
 export type Place = {
   id: PlaceId
@@ -91,5 +92,15 @@ export const PLACES: Place[] = [
     target: [-1, 9, 45],
     description:
       "Between D and E blocks. Under it are the lift, the IT department and the way to M block.",
+  },
+  {
+    id: "m-canteen",
+    name: "M block canteen",
+    short: "M block canteen",
+    level: "M block ground floor",
+    pos: [-6.6, 0.55, 60.1],
+    target: [-17.4, 0.7, 60.6],
+    description:
+      "Down the steps from the east end of the main hall. The glass wall looks out on the road; the menu wall and the servery are behind you.",
   },
 ]

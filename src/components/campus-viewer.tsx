@@ -172,11 +172,12 @@ export const CampusViewer = forwardRef<ViewerHandle, Props>(
         reset: () => goTo(START_PLACE),
       }
       const saved = loadView()
-      if (saved)
+      if (saved) {
         restoreView(saved, camera, walkPos, walkRot, orbit, () =>
           setMode("overview")
         )
-      else goTo(START_PLACE)
+        ground = walkPos.y - 1.65
+      } else goTo(START_PLACE)
       callbacks.current.onPosition(walkPos.x, walkPos.z, ground, walkRot.y)
       const keydown = (e: KeyboardEvent) => {
         if (

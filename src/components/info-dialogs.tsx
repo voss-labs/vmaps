@@ -117,10 +117,11 @@ export function HelpDialog({ open, onOpenChange }: DialogProps) {
         <div className="scope-note">
           <strong>What this map covers</strong>
           <p>
-            A first draft of Level 1 of the main campus, blocks A to G, built
-            from photos of the floor and a satellite view of the roof. Sizes,
-            positions and the upper floors are estimated, and M block and the
-            ground-floor labs are not modelled yet. It is not a surveyed map.
+            A first draft of Level 1 of the main campus, blocks A to G, with the
+            C block and M block canteens, built from photos of the floor and a
+            satellite view of the roof. Sizes, positions and the upper floors
+            are estimated, and the rest of M block and the ground-floor labs are
+            not modelled yet. It is not a surveyed map.
           </p>
         </div>
       </DialogContent>

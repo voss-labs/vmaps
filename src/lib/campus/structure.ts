@@ -210,13 +210,13 @@ function underneath(kit: Kit) {
   kit.box(1, 5, 2.4, P.x[0] + 0.5, P.y + 2.5, 53.8, "maroon")
 }
 
-// East wall with two openings: the M block canteen (south) and the lounge (north).
+// East wall with two openings: steps down to the M block canteen (south) and to the lounge (north).
 function eastEnd(kit: Kit) {
   const hl = HALL.length / 2,
     top = HALL.roof
   const walls: Vec2[] = [
     [-HALL.width / 2, -8.6],
-    [-5.1, 2],
+    [1.6, 2],
     [6, HALL.width / 2],
   ]
   for (const [x0, x1] of walls)
@@ -255,10 +255,20 @@ function eastEnd(kit: Kit) {
       }
     )
     kit.box(x1 - x0, 0.02, 0.12, (x0 + x1) / 2, 0.01, hl - 1.75, "mustard")
-    kit.box(x1 - x0 + 2, 0.3, 6, (x0 + x1) / 2, -1.25, hl + 3.2, "floor")
-    kit.box(x1 - x0 + 2, 4.5, 0.2, (x0 + x1) / 2, 1.1, hl + 6, "screen")
-    kit.solid((x0 + x1) / 2, hl - 0.6, x1 - x0, 2.4, -1.1, 3)
   }
+  kit.railPath(
+    [
+      [-5.25, hl - 1.7],
+      [-5.25, hl + 0.3],
+    ],
+    0,
+    -1.1
+  )
+  // Under the platform the canteen's servery bay runs back into the building, so the wall only closes above it.
+  kit.box(6.7, top - 3.1, 0.4, -1.75, (top + 3.1) / 2, hl + 0.2, "plaster")
+  kit.box(6.7, 2.9, 0.4, -1.75, -2.55, hl + 0.2, "plaster")
+  // The lounge is not modelled yet, so its steps are closed off.
+  kit.solid(4, hl - 0.6, 4, 2.4, -1.1, 3)
 }
 
 export function buildStructure(kit: Kit) {
