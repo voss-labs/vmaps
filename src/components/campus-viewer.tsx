@@ -5,10 +5,14 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js"
 import {
   buildCampus,
   PLACES,
+  START_PLACE,
   surfaceHeight,
   isBlocked,
   type PlaceId,
 } from "@/lib/campus"
+import { loadView, restoreView, saveView } from "@/lib/dev-view"
+import { createScene } from "@/lib/scene-setup"
+import { registerNavigateTool } from "@/lib/webmcp"
 export type ViewerHandle = {
   goTo: (id: PlaceId) => void
   setMode: (mode: "walk" | "overview") => void
@@ -58,53 +62,28 @@ export const CampusViewer = forwardRef<ViewerHandle, Props>(
       }
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.65))
       renderer.shadowMap.enabled = true
-      renderer.shadowMap.type = THREE.PCFSoftShadowMap
+      renderer.shadowMap.type = THREE.PCFShadowMap
       renderer.outputColorSpace = THREE.SRGBColorSpace
       renderer.toneMapping = THREE.ACESFilmicToneMapping
-      renderer.toneMappingExposure = 1.24
+      renderer.toneMappingExposure = 1.1
       el.appendChild(renderer.domElement)
       renderer.domElement.tabIndex = 0
       renderer.domElement.setAttribute(
         "aria-label",
-        "Interactive 3D VIT atrium. Drag to look around; use W A S D to move."
+        "Interactive 3D map of Level 1 of the VIT main campus. Drag to look around; use W A S D to move."
       )
-      const scene = new THREE.Scene()
-      scene.background = new THREE.Color("#dce5e5")
-      scene.fog = new THREE.Fog("#dce5e5", 65, 130)
-      const camera = new THREE.PerspectiveCamera(72, 1, 0.08, 180)
-      camera.rotation.order = "YXZ"
-      const hemi = new THREE.HemisphereLight("#f2f7ff", "#b8aa8d", 2.4)
-      scene.add(hemi)
-      const sun = new THREE.DirectionalLight("#fff4d9", 3.2)
-      sun.position.set(-14, 32, 14)
-      sun.target.position.set(1, 0, -3)
-      sun.castShadow = true
-      sun.shadow.mapSize.set(2048, 2048)
-      Object.assign(sun.shadow.camera, {
-        left: -33,
-        right: 33,
-        top: 36,
-        bottom: -36,
-        near: 1,
-        far: 90,
-      })
-      sun.shadow.bias = -0.0006
-      sun.shadow.normalBias = 0.025
-      scene.add(sun, sun.target)
-      const fill = new THREE.DirectionalLight("#d8ebff", 0.8)
-      fill.position.set(12, 8, -20)
-      scene.add(fill)
+      const { scene, camera, dispose: disposeScene } = createScene(renderer)
       const campus = buildCampus(scene)
       const orbit = new OrbitControls(camera, renderer.domElement)
       orbit.enabled = false
       orbit.enableDamping = true
-      orbit.minDistance = 15
-      orbit.maxDistance = 75
+      orbit.minDistance = 10
+      orbit.maxDistance = 220
       orbit.maxPolarAngle = Math.PI / 2.13
       orbit.target.set(0, 3, 0)
       let mode: "walk" | "overview" = "walk",
         running = false,
-        ground = 4.2,
+        ground = 0,
         dragging = false,
         prevX = 0,
         prevY = 0,
@@ -146,17 +125,17 @@ export const CampusViewer = forwardRef<ViewerHandle, Props>(
         if (m === "overview") {
           walkPos.copy(camera.position)
           walkRot.copy(camera.rotation)
-          camera.position.set(32, 40, 46)
-          orbit.target.set(0, 3, 0)
+          camera.position.set(0, 92, 74)
+          orbit.target.set(0, 0, -6)
           orbit.enabled = true
           orbit.update()
-          campus.roof.visible = false
         } else {
           orbit.enabled = false
           camera.position.copy(walkPos)
           camera.rotation.copy(walkRot)
-          campus.roof.visible = true
         }
+        campus.roof.visible = m === "walk"
+        campus.labels.visible = m === "overview"
         mode = m
         callbacks.current.onMode(m)
       }
@@ -190,9 +169,15 @@ export const CampusViewer = forwardRef<ViewerHandle, Props>(
         start,
         pause,
         move,
-        reset: () => goTo("walkway"),
+        reset: () => goTo(START_PLACE),
       }
-      goTo("walkway")
+      const saved = loadView()
+      if (saved)
+        restoreView(saved, camera, walkPos, walkRot, orbit, () =>
+          setMode("overview")
+        )
+      else goTo(START_PLACE)
+      callbacks.current.onPosition(walkPos.x, walkPos.z, ground, walkRot.y)
       const keydown = (e: KeyboardEvent) => {
         if (
           (e.target as HTMLElement)?.closest('input,textarea,[role="dialog"]')
@@ -336,6 +321,12 @@ export const CampusViewer = forwardRef<ViewerHandle, Props>(
             camera.rotation.y
           )
           report = now
+          const overview = mode === "overview"
+          saveView(
+            overview ? walkPos : camera.position,
+            overview ? walkRot : camera.rotation,
+            overview ? { camera: camera.position, target: orbit.target } : null
+          )
         }
         renderer.render(scene, camera)
       }
@@ -343,41 +334,7 @@ export const CampusViewer = forwardRef<ViewerHandle, Props>(
       callbacks.current.onReady()
       frame = requestAnimationFrame(animate)
       const lifecycle = new AbortController()
-      const mc = (
-        document as unknown as {
-          modelContext?: { registerTool: (t: unknown, o: unknown) => void }
-        }
-      ).modelContext
-      if (mc?.registerTool) {
-        try {
-          mc.registerTool(
-            {
-              name: "navigate_vit_interior",
-              description:
-                "Move the visitor to a named viewpoint in the VIT atrium reconstruction.",
-              inputSchema: {
-                type: "object",
-                properties: {
-                  place: { type: "string", enum: PLACES.map((p) => p.id) },
-                },
-                required: ["place"],
-                additionalProperties: false,
-              },
-              annotations: { readOnlyHint: false, untrustedContentHint: false },
-              execute: (input: { place: string }) => {
-                if (!PLACES.some((p) => p.id === input.place))
-                  throw new Error("Unknown viewpoint")
-                pause()
-                goTo(input.place as PlaceId)
-                return { place: input.place, mode: "walk" }
-              },
-            },
-            { signal: lifecycle.signal }
-          )
-        } catch {
-          /* Optional browser capability. */
-        }
-      }
+      registerNavigateTool(goTo, pause, lifecycle.signal)
       return () => {
         lifecycle.abort()
         pause()
@@ -389,7 +346,10 @@ export const CampusViewer = forwardRef<ViewerHandle, Props>(
         window.removeEventListener("blur", pause)
         document.removeEventListener("pointerlockchange", lockChange)
         scene.traverse((o) => {
-          if (o instanceof THREE.Mesh) {
+          if (o instanceof THREE.Sprite) {
+            o.material.map?.dispose()
+            o.material.dispose()
+          } else if (o instanceof THREE.Mesh) {
             o.geometry.dispose()
             const ms = Array.isArray(o.material) ? o.material : [o.material]
             ms.forEach((m) => {
@@ -398,6 +358,7 @@ export const CampusViewer = forwardRef<ViewerHandle, Props>(
             })
           }
         })
+        disposeScene()
         renderer.dispose()
         el.replaceChildren()
         api.current = null

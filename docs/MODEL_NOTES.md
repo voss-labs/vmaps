@@ -1,30 +1,39 @@
 # Model notes
 
-## Source
+## Sources
 
-Source video: `IMG_4946.MOV`, supplied for the VIT interior project. Duration: 44.515 seconds. The portrait image is stored in a rotated 1920 × 1080 stream.
+- About 63 photos of Level 1 taken on 2026-10-06, in walking order from the main gate to M block. They are not in the repository because they show students.
+- A hand-drawn sketch of the block layout: A, B, C and D in one row, G, F and E in the other, and M as a separate building at the far end.
+- The satellite view on Google Maps, measured against its scale bar. The main building's roof is about 110 m long and 36 m wide. M block is a separate, lower building of roughly 40 by 50 m at the east end.
+- The earlier source video, `IMG_4946.MOV` (44.5 seconds). Four of its frames are in `public/reference/` and shown in the website:
 
-Fifteen frames were extracted at three-second intervals. Four representative images are included in `public/reference/` and shown in the website:
+| Image              | Approximate time | Main evidence                                  |
+| ------------------ | ---------------- | ---------------------------------------------- |
+| `feature-wall.jpg` | 00:07            | Yellow D block wall, galleries and café edge   |
+| `atrium.jpg`       | 00:16            | Stair gallery, stone volume and gathering area |
+| `walkway.jpg`      | 00:25            | Interior walkway and surrounding walls         |
+| `stairway.jpg`     | 00:31            | Stairs, handrails and upper landing            |
 
-| Image              | Approximate time | Main evidence                                     |
-| ------------------ | ---------------- | ------------------------------------------------- |
-| `feature-wall.jpg` | 00:07            | Yellow angled façade, galleries and café edge     |
-| `atrium.jpg`       | 00:16            | Stair gallery, concrete volume and gathering area |
-| `walkway.jpg`      | 00:25            | Interior walkway and surrounding walls            |
-| `stairway.jpg`     | 00:31            | Central stairs, handrails and upper landing       |
+## Layout
 
-## Observed architecture
+The main building is one hall under a steel space-frame roof. The west end is a plain wall. The main gate is an opening in the south side at the west end, under a bamboo canopy and blue sheeting. Blocks line both long sides, with the main hall between them. Their fronts are not straight: feature volumes stand 2 to 5 m out into the hall, which narrows to about 9 to 12 m in places.
 
-The clip shows the lime-yellow feature volume, exposed white beams, metal railings, stacked balconies, timber-clad window bays, striped café awning, gray sculptural stairwell volume, stairs and seating.
+- North side, from the west wall: A (VIT glass box, accounts, library upstairs), a chess court, the exam department with the red phone box, print kiosk, ATM and stone prow, B (curved base, steel stair to a landing over the reception, blue wall, OSB box), the common area with the HP World kiosk, C (Cafeteria C-101 with Ribbons & Balloons and washrooms at the west end, under a white concrete frame), Nescafe, and D (yellow wall over a Level 2 walkway and a stone base, Department of First Year Engineering).
+- South side: the main gate, G (sawtooth glass, wedge balconies, a red brick box over the Computer Centre), a white stair tower with orange walls, the blue recess, F (a white Level 1 volume with a prow, the cream wall and timber box above, the F stair and recess, then a tan base, black band and orange box), Gate 2 out to the parking, and E (red brick wall with a wavy top, timber box, stationery shop, Department of Information Technology, lift and curved maroon wall).
+- A glass box on slim columns stands between D and E, above a Level 2 platform reached by timber steps and a stair underneath. The east wall opens to the M block canteen and the lounge.
+
+The main hall floor is Level 1. The ground floor below holds the labs and is reached by stairs in openings in the Level 1 floor. Levels 1 to 3 hold classrooms and Level 4 is a terrace and viewing gallery. Rooms are named by block, floor and number, for example F205.
 
 ## Estimates
 
-The modeled footprint is approximately 24 × 42 units, with 4.2-unit storey heights and a 1.65-unit eye height. These units are treated as metres for navigation but have not been calibrated to measurements.
+Block lengths, block depths, the position of every landmark and opening, the 4 m floor height and the roof height are estimated from the photos. Positions along the hall carry about 2 m of error and positions across it about 1.5 to 2.5 m; heights and proportions are firmer. Some measurements conflicted between photos, notably how far G's east end, the stair tower and F's white volume stand out into the hall; the model takes a middle position. The upper floors are generic balconies, rooms and terraces except where a block has a distinctive volume. The library is shown in A block as described, but the photo captions call the stair tower between G and F the stairs to the library, so how it is reached is not confirmed. Viewpoint names describe places in the model.
 
-No photogrammetric camera solving, metric depth recovery, LiDAR reconstruction or Gaussian splatting was performed. The scene is a manual interpretation of the footage. The upper-level connections, hidden surfaces, room depths and circulation are estimated. Viewpoint names describe locations in the model, rather than verified official room names.
+No photogrammetry, depth recovery or scanning was done. The scene is a manual interpretation of the photos. It should not be used for measurements or emergency navigation.
 
-The model covers the visible central atrium only. The source clip does not establish the complete college interior. It should not be used for measurements or emergency navigation.
+## Not modelled yet
+
+M block (its ground floor is the innovation labs and canteen), the ground-floor labs, room interiors, and walking on any floor other than Level 1.
 
 ## Improving accuracy
 
-Obtain a floor plan, floor heights, a few known distances, and continuous footage of each connecting route. Reconcile geometry and collision surfaces together. Capture rooms and areas absent from this clip before adding them as confirmed locations.
+Walk the model and correct positions in `src/lib/campus/` (see `docs/DEVELOPMENT.md`). A floor plan or the fire-exit plan boards, a few paced distances and the step count of one flight of stairs would calibrate the sizes. Capture each floor before adding it as confirmed.

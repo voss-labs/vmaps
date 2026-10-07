@@ -543,7 +543,7 @@ button:disabled {
   border-radius: 50%;
   display: inline-block;
 }
-.mini-map svg {
+.mini-map > svg {
   display: block;
   width: 100%;
   height: 172px;
@@ -937,7 +937,7 @@ button:disabled {
   .mini-map {
     width: 224px;
   }
-  .mini-map svg {
+  .mini-map > svg {
     height: 190px;
   }
   .walk-prompt {
@@ -981,7 +981,7 @@ button:disabled {
     bottom: 99px;
     width: 183px;
   }
-  .mini-map svg {
+  .mini-map > svg {
     height: 149px;
   }
 }
@@ -1015,7 +1015,7 @@ button:disabled {
     right: 18px;
     width: 179px;
   }
-  .mini-map svg {
+  .mini-map > svg {
     height: 148px;
   }
   .location-bar {
@@ -1060,7 +1060,7 @@ button:disabled {
     padding: 11px 8px;
     bottom: 132px;
   }
-  .mini-map svg {
+  .mini-map > svg {
     height: 115px;
   }
   .map-foot > span {
@@ -1199,7 +1199,7 @@ button:disabled {
     width: 134px;
     padding: 10px 8px;
   }
-  .mini-map svg {
+  .mini-map > svg {
     height: 107px;
   }
   .map-head {
@@ -1412,7 +1412,7 @@ button:disabled {
 .mini-map {
   width: 204px;
 }
-.mini-map svg {
+.mini-map > svg {
   height: 172px;
 }
 .walk-prompt {
@@ -1426,7 +1426,7 @@ button:disabled {
   .mini-map {
     width: 196px;
   }
-  .mini-map svg {
+  .mini-map > svg {
     height: 157px;
   }
   .walk-prompt strong {
@@ -1455,7 +1455,7 @@ button:disabled {
   .mini-map {
     width: 146px;
   }
-  .mini-map svg {
+  .mini-map > svg {
     height: 123px;
   }
   .map-head {

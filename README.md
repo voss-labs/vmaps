@@ -2,7 +2,7 @@
 
 An interactive 3D map of VIT (Vidyalankar Institute of Technology, Mumbai), by [voss-labs](https://github.com/voss-labs).
 
-Walk the central atrium in first person, climb the stairs, switch to a rotatable overview and jump between viewpoints. It runs entirely in the browser: no accounts, no backend, no API keys.
+Walk Level 1 of the main campus in first person, past blocks A to G around the main hall, switch to a rotatable overview and jump between viewpoints. It runs entirely in the browser: no accounts, no backend, no API keys.
 
 ## Stack
 
@@ -48,12 +48,13 @@ Open http://localhost:5173 and press Start walking. Node 22.13 or newer.
 | Jump to a viewpoint      | Place list or numbered map point        |
 | Reset                    | Reset button in the bottom toolbar      |
 
-## What is in the MVP
+## What is in the draft
 
-- First-person keyboard navigation and mouse look, with drag-to-look as the fallback
-- Walkable stairs, three modeled elevations, obstacle collisions and balcony boundaries
-- Rotatable 3D overview and a live position marker on the estimated floor plan
-- Five viewpoint shortcuts and four reference frames from the source video
+- Level 1 of the main building at an estimated scale (about 110 by 36 m): blocks A to G with their feature volumes and signs, the exam department, the stair tower and blue recess, the C block canteen, Nescafe, the glass box on its platform, the main gate and Gate 2
+- Four openings in the floor down to the ground-floor labs, two with stairs, each with a low parapet, a handrail and benches
+- First-person keyboard navigation and mouse look on Level 1, with collisions and drag-to-look as the fallback
+- Rotatable 3D overview with block letters and place names, and a live position marker on the floor plan
+- Seven viewpoint shortcuts and four reference frames from an earlier video
 - Touch direction buttons and drag-to-look on mobile
 - Optional, feature-detected WebMCP viewpoint navigation
 
@@ -66,9 +67,20 @@ src/
   styles.css             theme tokens and app styling
   components/
     campus-viewer.tsx    Three.js rendering, movement and inputs
+    floor-plan.tsx       floor plan card drawn from the layout data
+    info-dialogs.tsx     reference frames and help dialogs
     ui/                  button, dialog and tabs primitives
   lib/
-    campus.ts            geometry, viewpoints, walkable surfaces and obstacles
+    campus/
+      layout.ts          hall size, floor openings, glass box (start here to correct the model)
+      blocks/            one file per block or court
+      north-row.ts       order of A, chess court, exam department, B, common area, C, Nescafe, D
+      south-row.ts       order of main gate, G, stair tower, blue recess, F, Gate 2, E
+      places.ts          viewpoints
+      navigation.ts      walkable area, obstacles, level names
+      kit.ts, pieces.ts, segments.ts, openings.ts, structure.ts, hall.ts, materials.ts   turn the layout into meshes
+    dev-view.ts          keeps the camera in place across edits in dev
+    webmcp.ts            optional WebMCP viewpoint tool
     utils.ts             class-name helper
 public/reference/        four frames from the source video
 docs/                    model notes and the development guide
@@ -80,7 +92,7 @@ docs/                    model notes and the development guide
 
 ## Model accuracy
 
-This MVP reconstructs the central atrium visible in a 44-second video. It is not a measured scan or a complete campus model: dimensions, upper-level connections and unseen surfaces are estimates. Read [docs/MODEL_NOTES.md](./docs/MODEL_NOTES.md) before expanding it or presenting it as an accurate map.
+This draft models Level 1 of the main building from photos of the floor, a hand-drawn block sketch and a satellite view of the roof. It is not a measured scan or a complete campus model: block sizes, positions and the upper floors are estimates, and M block and the ground-floor labs are not modelled yet. Read [docs/MODEL_NOTES.md](./docs/MODEL_NOTES.md) before expanding it or presenting it as an accurate map.
 
 ## Docs
 

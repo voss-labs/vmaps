@@ -7,12 +7,10 @@ import {
   ArrowUp,
   Box,
   Camera,
-  Check,
   ChevronDown,
   Expand,
   Footprints,
   HelpCircle,
-  Layers3,
   MapPin,
   Mouse,
   Navigation,
@@ -20,14 +18,9 @@ import {
   Video,
 } from "lucide-react"
 import { CampusViewer, type ViewerHandle } from "@/components/campus-viewer"
-import { PLACES, type PlaceId } from "@/lib/campus"
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog"
+import { FloorPlan } from "@/components/floor-plan"
+import { HelpDialog, ReferenceDialog } from "@/components/info-dialogs"
+import { levelName, PLACES, START_PLACE, type PlaceId } from "@/lib/campus"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function App() {
@@ -35,15 +28,14 @@ export default function App() {
   const [ready, setReady] = useState(false),
     [error, setError] = useState(""),
     [mode, setMode] = useState<"walk" | "overview">("walk"),
-    [active, setActive] = useState<PlaceId>("walkway"),
+    [active, setActive] = useState<PlaceId>(START_PLACE),
     [walking, setWalking] = useState(false),
     [source, setSource] = useState(false),
     [help, setHelp] = useState(false),
     [mobilePlaces, setMobilePlaces] = useState(false),
-    [frame, setFrame] = useState(0),
-    [pos, setPos] = useState({ x: -4, z: 18, y: 4.2, yaw: 0 })
+    [pos, setPos] = useState({ x: 0, z: -51, y: 0, yaw: 0 })
   const place = PLACES.find((p) => p.id === active)!
-  const level = pos.y > 6 ? "Level 2" : pos.y > 2 ? "Level 1" : "Ground"
+  const level = levelName(pos.y)
   const goTo = (id: PlaceId) => {
     setActive(id)
     viewer.current?.pause()
@@ -51,12 +43,6 @@ export default function App() {
     setMode("walk")
     setMobilePlaces(false)
   }
-  const sourceFrames = [
-    { file: "feature-wall.jpg", title: "Yellow feature wall", time: "00:07" },
-    { file: "atrium.jpg", title: "Atrium & stair gallery", time: "00:16" },
-    { file: "walkway.jpg", title: "Interior walkway", time: "00:25" },
-    { file: "stairway.jpg", title: "Central stairway", time: "00:31" },
-  ]
   const openSource = () => {
     viewer.current?.pause()
     setSource(true)
@@ -82,7 +68,7 @@ export default function App() {
         </a>
         <div className="top-actions">
           <span className="build-badge">
-            INTERIOR MVP <span>01</span>
+            CAMPUS DRAFT <span>02</span>
           </span>
           <button
             className="icon-button"
@@ -117,16 +103,16 @@ export default function App() {
           aria-label="Explore viewpoints"
         >
           <div className="panel-heading">
-            <div className="eyebrow">EXPLORE THE INTERIOR</div>
+            <div className="eyebrow">EXPLORE THE CAMPUS</div>
             <h1>
               A place you know.
               <br />A new perspective.
             </h1>
-            <p>Step inside the central atrium.</p>
+            <p>Walk Level 1 of the main campus.</p>
           </div>
           <div className="section-label">
             <span>JUMP TO A PLACE</span>
-            <span>05</span>
+            <span>{String(PLACES.length).padStart(2, "0")}</span>
           </div>
           <nav className="place-list">
             {PLACES.map((p, i) => (
@@ -135,7 +121,9 @@ export default function App() {
                 className={"place-card " + (active === p.id ? "selected" : "")}
                 onClick={() => goTo(p.id)}
               >
-                <span className="place-num">0{i + 1}</span>
+                <span className="place-num">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
                 <span className="place-copy">
                   <strong>{p.short}</strong>
                   <small>{p.level}</small>
@@ -170,13 +158,13 @@ export default function App() {
               <Box size={17} />
             </span>
             <p>
-              <strong>Video-based reconstruction</strong>
-              <span>Visible atrium · Estimated dimensions</span>
+              <strong>Photo-based draft</strong>
+              <span>Level 1 · Blocks A–G · Estimated sizes</span>
             </p>
           </div>
           <footer className="panel-footer">
             <span>VOSS LABS · VIT, MUMBAI</span>
-            <span>EST. INTERIOR LAYOUT</span>
+            <span>EST. LEVEL 1 LAYOUT</span>
           </footer>
         </aside>
         <section className="viewport" aria-label="3D campus map">
@@ -193,7 +181,7 @@ export default function App() {
             <span className="location-icon">
               <MapPin size={16} />
             </span>
-            <span>Central atrium</span>
+            <span>Main campus</span>
             <span className="breadcrumb-slash">/</span>
             <strong>{mode === "overview" ? "Building overview" : level}</strong>
             <button
@@ -224,7 +212,7 @@ export default function App() {
           ) : !ready ? (
             <div className="loading-state">
               <span className="loading-orbit" />
-              <h2>Opening the atrium</h2>
+              <h2>Opening the campus</h2>
               <p>Preparing your 3D campus…</p>
             </div>
           ) : null}
@@ -257,129 +245,13 @@ export default function App() {
               <span>Drag to orbit · Scroll to zoom</span>
             </div>
           )}
-          <div className="mini-map">
-            <div className="map-head">
-              <span>
-                <Layers3 size={14} />{" "}
-                {mode === "overview" ? "ATRIUM" : level.toUpperCase()}
-              </span>
-              <span className="map-you">
-                <i /> You
-              </span>
-            </div>
-            <svg
-              viewBox="0 0 190 190"
-              role="img"
-              aria-label="Estimated atrium floor plan and current position"
-            >
-              <defs>
-                <pattern
-                  id="tilePattern"
-                  width="12"
-                  height="12"
-                  patternUnits="userSpaceOnUse"
-                >
-                  <path
-                    d="M12 0H0V12"
-                    fill="none"
-                    stroke="#e0dfd7"
-                    strokeWidth=".6"
-                  />
-                </pattern>
-              </defs>
-              <rect
-                x="40"
-                y="13"
-                width="110"
-                height="162"
-                rx="1"
-                fill="#e9e8e0"
-                stroke="#a5aaa3"
-                strokeWidth="2"
-              />
-              <rect
-                x="54"
-                y="28"
-                width="82"
-                height="130"
-                fill="url(#tilePattern)"
-                stroke="#bac0b8"
-              />
-              <path d="M140 66v49" stroke="#d8db37" strokeWidth="9" />
-              <path
-                d="M43 28v40m0 11v25m0 11v27"
-                stroke="#ad8666"
-                strokeWidth="6"
-              />
-              <rect x="87" y="110" width="16" height="46" fill="#c9ceca" />
-              {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
-                <path
-                  key={i}
-                  d={`M87 ${113 + i * 5}h16`}
-                  stroke="#919b93"
-                  strokeWidth="1"
-                />
-              ))}
-              <rect x="55" y="42" width="13" height="44" fill="#b2bdba" />
-              {[0, 1, 2, 3].map((i) => (
-                <rect
-                  key={i}
-                  x={i % 2 ? 111 : 72}
-                  y={i < 2 ? 77 : 103}
-                  width="14"
-                  height="4"
-                  fill="#9d8d77"
-                />
-              ))}
-              {PLACES.slice(0, 4).map((p, i) => (
-                <g
-                  key={p.id}
-                  className="map-target"
-                  role="button"
-                  tabIndex={0}
-                  aria-label={`Go to ${p.short}`}
-                  onClick={() => goTo(p.id)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") goTo(p.id)
-                  }}
-                >
-                  <circle
-                    cx={95 + p.pos[0] * 4.2}
-                    cy={94 + p.pos[2] * 3.7}
-                    r="8"
-                    fill={active === p.id ? "#f7f7f0" : "#fff"}
-                    stroke="#aaa99f"
-                  />
-                  <text
-                    x={95 + p.pos[0] * 4.2}
-                    y={97 + p.pos[2] * 3.7}
-                    textAnchor="middle"
-                    fill="#595e59"
-                    fontSize="8"
-                    fontFamily="Arial"
-                  >
-                    {i + 1}
-                  </text>
-                </g>
-              ))}
-              {mode === "walk" && (
-                <g
-                  transform={`translate(${95 + pos.x * 4.2} ${94 + pos.z * 3.7}) rotate(${(-pos.yaw * 180) / Math.PI})`}
-                >
-                  <path d="M0 0-10-21Q0-27 10-21Z" fill="#b84d3725" />
-                  <circle
-                    r="5.5"
-                    fill="#b84d37"
-                    stroke="#fff"
-                    strokeWidth="2"
-                  />
-                </g>
-              )}
-            </svg>
-            <div className="map-foot">
-              Approximate layout <span>INTERIOR ONLY</span>
-            </div>
-          </div>
+          <FloorPlan
+            mode={mode}
+            level={level}
+            pos={pos}
+            active={active}
+            onGo={goTo}
+          />
           <div className="view-toolbar">
             <Tabs
               value={mode}
@@ -402,7 +274,7 @@ export default function App() {
             <button
               title="Return to starting view"
               aria-label="Return to starting view"
-              onClick={() => goTo("walkway")}
+              onClick={() => goTo(START_PLACE)}
             >
               <RotateCcw size={17} />
             </button>
@@ -461,107 +333,8 @@ export default function App() {
           </span>
         </section>
       </div>
-      <Dialog open={source} onOpenChange={setSource}>
-        <DialogContent className="reference-dialog">
-          <DialogHeader>
-            <div className="eyebrow">THE REAL SPACE</div>
-            <DialogTitle>Your video, frame by frame.</DialogTitle>
-            <DialogDescription>
-              Extracted from IMG_4946.MOV · 44 seconds. Compare these views with
-              the 3D reconstruction.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="reference-layout">
-            <div className="frame-view">
-              <img
-                src={
-                  import.meta.env.BASE_URL +
-                  "reference/" +
-                  sourceFrames[frame].file
-                }
-                alt={sourceFrames[frame].title}
-              />
-              <span>{sourceFrames[frame].time}</span>
-            </div>
-            <div className="frame-options">
-              {sourceFrames.map((f, i) => (
-                <button
-                  className={frame === i ? "active" : ""}
-                  key={f.file}
-                  onClick={() => setFrame(i)}
-                >
-                  <img
-                    src={import.meta.env.BASE_URL + "reference/" + f.file}
-                    alt=""
-                  />
-                  <span>
-                    <strong>{f.title}</strong>
-                    <small>{f.time} · Source frame</small>
-                  </span>
-                  {frame === i && <Check size={16} />}
-                </button>
-              ))}
-              <div className="reference-note">
-                <Box size={19} />
-                <p>
-                  The geometry is interpreted from visible architecture. The
-                  clip does not provide a measured scan, a full floor plan, or
-                  unseen rooms.
-                </p>
-              </div>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-      <Dialog open={help} onOpenChange={setHelp}>
-        <DialogContent className="help-dialog">
-          <DialogHeader>
-            <div className="eyebrow">MAKE YOURSELF AT HOME</div>
-            <DialogTitle>A little help getting around.</DialogTitle>
-            <DialogDescription>
-              Explore the atrium in first person, or inspect its layout from
-              above.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="help-controls">
-            <p>
-              <span>
-                <kbd>W A S D</kbd> or <kbd>↑ ↓ ← →</kbd>
-              </span>
-              <strong>Walk</strong>
-            </p>
-            <p>
-              <kbd>SHIFT</kbd>
-              <strong>Walk faster</strong>
-            </p>
-            <p>
-              <span>Mouse / touch drag</span>
-              <strong>Look around</strong>
-            </p>
-            <p>
-              <kbd>ESC</kbd>
-              <strong>Release mouse</strong>
-            </p>
-            <p>
-              <kbd>M</kbd>
-              <strong>Switch overview</strong>
-            </p>
-          </div>
-          <p className="help-note">
-            Use the place list or numbered map points to jump to a viewpoint. On
-            a phone, drag the scene to look and use the directional buttons to
-            move.
-          </p>
-          <div className="scope-note">
-            <strong>What this map covers</strong>
-            <p>
-              A conceptual reconstruction of the central atrium visible in your
-              video. Dimensions, connections, and upper-level circulation are
-              estimated. It is not a complete or surveyed college map.
-            </p>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <ReferenceDialog open={source} onOpenChange={setSource} />
+      <HelpDialog open={help} onOpenChange={setHelp} />
     </main>
   )
 }
